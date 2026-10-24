@@ -1,0 +1,14 @@
+{
+  "name": "rig",
+  "version": "1.0.0",
+  "description": "Local dashboard for running LLMs on Apple Silicon Macs: memory fit check, model load/unload and benchmarks for LM Studio, Ollama and MLX",
+  "private": true,
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "os": ["darwin"],
+  "license": "MIT",
+  "author": "Angelo Manzano Jr. (https://chrowmdesigns.com)",
+  "repository": { "type": "git", "url": "https://github.com/cdzn77/rig.git" },
+  "keywords": ["llm", "local-llm", "apple-silicon", "mlx", "lm-studio", "ollama", "macos", "dashboard"]
+}

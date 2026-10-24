@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rig</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <a class="skip" href="#models">Skip to models</a>
+
+  <header class="top">
+    <div class="brand">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 15l3-4 3 3 4-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Rig</span>
+    </div>
+    <p class="machine" id="machine">Reading this Mac…</p>
+    <p class="conn" id="conn" role="status"><span class="dot" aria-hidden="true"></span><span class="conn-text">Connecting</span></p>
+  </header>
+
+  <main>
+    <section aria-labelledby="now-h">
+      <h2 id="now-h" class="section-h">Right now</h2>
+      <div class="tiles" id="tiles">
+        <article class="tile" id="t-pressure" aria-labelledby="t-pressure-h">
+          <h3 id="t-pressure-h">Memory pressure</h3>
+          <p class="big" data-v="pressure">–</p>
+          <p class="sub" data-v="ram">–</p>
+        </article>
+        <article class="tile tile-wide" id="t-budget" aria-labelledby="t-budget-h">
+          <h3 id="t-budget-h">Memory for models</h3>
+          <p class="big" data-v="headroom">–</p>
+          <div class="meter" role="meter" aria-labelledby="t-budget-h" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-v="budget-meter">
+            <span class="meter-fill"></span>
+          </div>
+          <p class="sub" data-v="budget">–</p>
+        </article>
+        <article class="tile" id="t-swap" aria-labelledby="t-swap-h">
+          <h3 id="t-swap-h">Swap</h3>
+          <p class="big" data-v="swap">–</p>
+          <p class="sub" data-v="swap-note">–</p>
+        </article>
+        <article class="tile" id="t-gpu" aria-labelledby="t-gpu-h">
+          <h3 id="t-gpu-h">GPU</h3>
+          <p class="big" data-v="gpu">–</p>
+          <p class="sub" data-v="gpu-note">–</p>
+        </article>
+        <article class="tile" id="t-thermal" aria-labelledby="t-thermal-h">
+          <h3 id="t-thermal-h">Thermals</h3>
+          <p class="big" data-v="thermal">–</p>
+          <p class="sub" data-v="thermal-note">–</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="apps-h">
+      <h2 id="apps-h" class="section-h">What's using memory</h2>
+      <p class="hint">The apps holding the most RAM right now (approximate, helpers grouped under their app). Quitting one you don't need is the only thing that reliably frees memory for a model. Rig never closes anything for you.</p>
+      <ul class="apps" id="apps"><li class="empty">Reading…</li></ul>
+    </section>
+
+    <section id="models" aria-labelledby="models-h" tabindex="-1">
+      <div class="section-row">
+        <h2 id="models-h" class="section-h">Models</h2>
+        <button type="button" class="btn btn-quiet" id="refresh">Refresh</button>
+      </div>
+      <div id="runtimes"></div>
+    </section>
+
+    <section aria-labelledby="hist-h">
+      <h2 id="hist-h" class="section-h">Last 15 minutes</h2>
+      <div class="charts">
+        <figure class="chart">
+          <figcaption><span class="key key-a" aria-hidden="true"></span>Memory in use <span class="key key-b" aria-hidden="true"></span>Held by models</figcaption>
+          <canvas id="c-mem" height="140" role="img" aria-label="Memory history"></canvas>
+          <p class="chart-sum" data-v="mem-sum"></p>
+        </figure>
+        <figure class="chart">
+          <figcaption><span class="key key-a" aria-hidden="true"></span>GPU use <span class="key key-b" aria-hidden="true"></span>CPU use</figcaption>
+          <canvas id="c-gpu" height="140" role="img" aria-label="GPU and CPU history"></canvas>
+          <p class="chart-sum" data-v="gpu-sum"></p>
+        </figure>
+        <figure class="chart">
+          <figcaption><span class="key key-a" aria-hidden="true"></span>Swap used</figcaption>
+          <canvas id="c-swap" height="140" role="img" aria-label="Swap history"></canvas>
+          <p class="chart-sum" data-v="swap-sum"></p>
+        </figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="bench-h">
+      <div class="section-row">
+        <h2 id="bench-h" class="section-h">Benchmarks</h2>
+        <label class="field">
+          <span>Prompt</span>
+          <select id="prompt-type"></select>
+        </label>
+      </div>
+      <p class="hint">Use <strong>Benchmark</strong> on any loaded model. The short prompt measures decode speed (how fast it writes). The long prompt adds prefill speed (how fast it reads a big context), which is what you feel when pasting in long files.</p>
+      <div class="table-wrap">
+        <table class="table" id="bench-table">
+          <caption class="sr-only">Benchmark results, newest first</caption>
+          <thead>
+            <tr>
+              <th scope="col">When</th>
+              <th scope="col">Model</th>
+              <th scope="col">Prompt</th>
+              <th scope="col" class="num">Decode tok/s</th>
+              <th scope="col" class="num">Prefill tok/s</th>
+              <th scope="col" class="num">First token</th>
+              <th scope="col" class="num">Tokens</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="7" class="empty">No runs yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="log-h">
+      <h2 id="log-h" class="section-h">Activity</h2>
+      <ul class="log" id="log"><li class="empty">Nothing yet.</li></ul>
+    </section>
+  </main>
+
+  <div class="sr-only" aria-live="polite" id="announcer"></div>
+  <div class="toast" id="toast" role="alert" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
