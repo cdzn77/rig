@@ -14,6 +14,8 @@ It's one Node process with zero dependencies. It only listens on `127.0.0.1`.
   <img src="docs/screenshot.png" alt="Rig dashboard: memory pressure, memory for models, swap, GPU and thermals tiles; a list of apps using memory; and an LM Studio model table with fit labels such as Loaded, Unload another first, Fits and Too big for this Mac." width="100%">
 </p>
 
+<sub>Screenshots use sample data, not measurements from a real machine.</sub>
+
 ## What it does
 
 **Memory fit check.** Every installed model gets a label: Fits, Tight fit, Close apps first, Unload another first, or Too big for this Mac. The estimate checks two limits and uses the tighter one: the GPU memory limit macOS enforces, and the RAM your other apps leave free.
