@@ -208,6 +208,9 @@ function httpError(status, message) {
 
 // ---------------------------------------------------------------- http
 const clients = new Set();
+// A visited web page can hold unreadable no-cors streams open until tab close;
+// bound registrations so held connections can't exhaust the daemon's fds.
+const MAX_STREAM_CLIENTS = 32;
 function send(res, data) {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
@@ -260,6 +263,10 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/api/stream') {
+    if (clients.size >= MAX_STREAM_CLIENTS) {
+      res.writeHead(429, { 'content-type': 'application/json', 'cache-control': 'no-store' });
+      return res.end(JSON.stringify({ error: 'Too many open streams. Close a dashboard tab and retry.' }));
+    }
     res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-store', connection: 'keep-alive' });
     res.write('retry: 3000\n\n');
     clients.add(res);
